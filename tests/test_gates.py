@@ -15,7 +15,7 @@ from src.logic.components.gates.not_gate import NotGate
 
 def test_and_gate():
 
-    gate = AndGate()
+    gate = AndGate("AND_1")
 
     gate.inputs = [False, False]
     assert gate.evaluate() is False
@@ -32,7 +32,7 @@ def test_and_gate():
 
 def test_or_gate():
 
-    gate = OrGate()
+    gate = OrGate("OR_1")
 
     gate.inputs = [False, False]
     assert gate.evaluate() is False
@@ -49,7 +49,7 @@ def test_or_gate():
 
 def test_xor_gate():
 
-    gate = XorGate()
+    gate = XorGate("XOR_1")
 
     gate.inputs = [False, False]
     assert gate.evaluate() is False
@@ -66,7 +66,7 @@ def test_xor_gate():
 
 def test_not_gate():
 
-    gate = NotGate()
+    gate = NotGate("NOT_1")
 
     gate.inputs = [False]
     assert gate.evaluate() is True

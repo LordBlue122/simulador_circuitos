@@ -24,7 +24,7 @@ def test_xor_truth_table():
     a = InputNode("A")
     b = InputNode("B")
 
-    gate = XorGate()
+    gate = XorGate("XOR_1")
 
     out = OutputNode("OUT")
 

@@ -22,7 +22,7 @@ def test_valid_circuit():
     a = InputNode("A")
     b = InputNode("B")
 
-    gate = AndGate()
+    gate = AndGate("AND_1")
 
     out = OutputNode("OUT")
 
@@ -33,7 +33,7 @@ def test_valid_circuit():
 
     circuit.connect(a, gate, 0)
     circuit.connect(b, gate, 1)
-
+    circuit.connect(gate, out, 0)
     validator = CircuitValidator(circuit)
 
     assert validator.validate() is True

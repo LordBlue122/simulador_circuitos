@@ -21,8 +21,8 @@ def test_multilevel_circuit_true():
     b = InputNode("B", True)
     c = InputNode("C", False)
 
-    and_gate = AndGate()
-    or_gate = OrGate()
+    and_gate = AndGate("AND_1")
+    or_gate = OrGate("OR_1")
 
     out = OutputNode("OUT")
 
@@ -58,8 +58,8 @@ def test_multilevel_circuit_false():
     b = InputNode("B", True)
     c = InputNode("C", False)
 
-    and_gate = AndGate()
-    or_gate = OrGate()
+    and_gate = AndGate("AND_1")
+    or_gate = OrGate("OR_1")
 
     out = OutputNode("OUT")
 

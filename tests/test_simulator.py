@@ -23,7 +23,7 @@ def test_and_simulation():
     a = InputNode("A", True)
     b = InputNode("B", True)
 
-    gate = AndGate()
+    gate = AndGate("AND_1")
 
     out = OutputNode("OUT")
 

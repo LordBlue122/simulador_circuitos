@@ -14,8 +14,11 @@ class GateFactory:
     }
 
     @classmethod
-    def create(cls, gate_type: str):
-
+    def create(
+        cls,
+        gate_type: str,
+        name: str
+    ):
         gate_type = gate_type.upper()
 
         if gate_type not in cls._gate_registry:
@@ -23,4 +26,4 @@ class GateFactory:
                 f"Compuerta no soportada: {gate_type}"
             )
 
-        return cls._gate_registry[gate_type]()
+        return cls._gate_registry[gate_type](name)

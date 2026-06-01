@@ -3,9 +3,9 @@ from .gate import Gate
 
 class AndGate(Gate):
 
-    def __init__(self):
-        super().__init__("AND", 2)
+    def __init__(self, name: str):
+        super().__init__(name, 2)
 
     def evaluate(self) -> bool:
-        self.output = all(self.inputs)
+        self.output = self.inputs[0] and self.inputs[1]
         return self.output

@@ -12,8 +12,8 @@ def test_circuit_creation():
 
     circuit = Circuit()
 
-    and_gate = AndGate()
-    or_gate = OrGate()
+    and_gate = AndGate("AND_1")
+    or_gate = OrGate("OR_1")
 
     circuit.add_component(and_gate)
     circuit.add_component(or_gate)
@@ -25,8 +25,8 @@ def test_circuit_connection():
 
     circuit = Circuit()
 
-    and_gate = AndGate()
-    or_gate = OrGate()
+    and_gate = AndGate("AND_1")
+    or_gate = OrGate("OR_1")
 
     circuit.add_component(and_gate)
     circuit.add_component(or_gate)
@@ -49,8 +49,8 @@ def test_multiple_connections():
 
     circuit = Circuit()
 
-    gate_a = AndGate()
-    gate_b = OrGate()
+    gate_a = AndGate("AND_1")
+    gate_b = OrGate("OR_1")
 
     circuit.add_component(gate_a)
     circuit.add_component(gate_b)
@@ -74,7 +74,7 @@ def test_remove_component():
 
     circuit = Circuit()
 
-    gate = AndGate()
+    gate = AndGate("AND_1")
 
     circuit.add_component(gate)
 

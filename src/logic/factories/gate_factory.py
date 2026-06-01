@@ -27,3 +27,10 @@ class GateFactory:
             )
 
         return cls._gate_registry[gate_type](name)
+    
+    @classmethod
+    def get_available_gates(cls):
+
+        return list(
+            cls._gate_registry.keys()
+        )

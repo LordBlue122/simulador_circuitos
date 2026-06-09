@@ -1,5 +1,6 @@
 import tkinter as tk
 from src.logic.circuits.circuit import Circuit
+from src.ui.widgets.wire_widget import WireWidget
 
 
 class WorkspaceCanvas(tk.Canvas):
@@ -13,7 +14,10 @@ class WorkspaceCanvas(tk.Canvas):
 
         self.gate_count = 0
         self.gate_widgets = []
+        self.wire_widgets = []
         self.selected_widget = None
+        self.connection_source = None
+        self.component_widgets = {}
 
         self.last_x = 0
         self.last_y = 0
@@ -54,6 +58,7 @@ class WorkspaceCanvas(tk.Canvas):
         )
 
         self.gate_widgets.append(widget)
+        self.component_widgets[component.name] = widget
 
         print(len(self.circuit.get_components()))
 
@@ -69,12 +74,17 @@ class WorkspaceCanvas(tk.Canvas):
 
     def on_mouse_press(self, event):
 
-        item = self.find_closest(event.x, event.y)
+        item = self.find_overlapping(
+            event.x,
+            event.y,
+            event.x,
+            event.y
+        )
 
         if not item:
             return
 
-        item_id = item[0]
+        item_id = item[-1]
 
         widget = self.find_widget(item_id)
 
@@ -94,6 +104,8 @@ class WorkspaceCanvas(tk.Canvas):
         dy = event.y - self.last_y
 
         self.selected_widget.move(dx, dy)
+        
+        self.update_wires()
 
         self.last_x = event.x
         self.last_y = event.y
@@ -101,3 +113,67 @@ class WorkspaceCanvas(tk.Canvas):
     def on_mouse_release(self, event):
 
         self.selected_widget = None
+        
+    def start_connection(self, gate_widget):
+
+        self.connection_source = gate_widget
+
+        print(
+            f"Origen seleccionado: "
+            f"{gate_widget.component.name}"
+        )
+        
+    def finish_connection(self, target_widget):
+
+        if self.connection_source is None:
+            return
+
+        source_component = (
+            self.connection_source.component
+        )
+
+        target_component = (
+            target_widget.component
+        )
+
+        if source_component == target_component:
+            self.connection_source = None
+            return
+
+        wire = self.circuit.connect(
+            source_component,
+            target_component,
+            0
+        )
+
+        wire_widget = WireWidget(
+            self,
+            wire,
+            self.connection_source,
+            target_widget
+        )
+
+        self.wire_widgets.append(
+            wire_widget
+        )
+
+        self.connection_source = None
+        
+        print(
+            f"{source_component.name}"
+            f" -> "
+            f"{target_component.name}"
+        )
+
+    def handle_connection_click(
+        self,
+    gate_widget
+    ):
+        if self.connection_source is None:
+            self.start_connection(gate_widget)
+        else:
+            self.finish_connection(gate_widget)
+
+    def update_wires(self):
+        for wire_widget in self.wire_widgets:
+            wire_widget.update_position()

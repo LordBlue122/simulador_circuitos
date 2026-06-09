@@ -22,6 +22,18 @@ class GateWidget:
         self.text_id = None
 
         self.draw()
+        
+        self.canvas.tag_bind(
+            self.rect_id,
+            "<Button-3>",
+            self.on_connect_click
+        )
+
+        self.canvas.tag_bind(
+            self.text_id,
+            "<Button-3>",
+            self.on_connect_click
+        )
 
     def draw(self):
 
@@ -34,7 +46,7 @@ class GateWidget:
 
         self.text_id = self.canvas.create_text(
             self.x + self.WIDTH / 2,
-            self.y + self.HEIGHT / 2,
+            self.y + self.HEIGHT / 2, 
             text=self.component.name
         )
 
@@ -64,3 +76,20 @@ class GateWidget:
             self.rect_id,
             self.text_id
         )
+        
+    def get_input_position(self):
+        return (
+            self.x,
+            self.y + self.HEIGHT // 2
+        )
+
+    def get_output_position(self):
+        return (
+            self.x + self.WIDTH,
+            self.y + self.HEIGHT // 2
+        )
+        
+    def on_connect_click(self, event):
+        self.canvas.handle_connection_click(
+            self
+    )

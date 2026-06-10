@@ -6,7 +6,7 @@ from src.logic.circuits.validator import CircuitValidator
 
 class WorkspaceCanvas(tk.Canvas):
 
-    def __init__(self, parent):
+    def __init__(self, parent, on_selection_changed=None):
 
         super().__init__(
             parent,
@@ -19,6 +19,8 @@ class WorkspaceCanvas(tk.Canvas):
         self.selected_widget = None
         self.connection_source = None
         self.component_widgets = {}
+        
+        self.on_selection_changed = (on_selection_changed)
 
         self.last_x = 0
         self.last_y = 0
@@ -97,6 +99,11 @@ class WorkspaceCanvas(tk.Canvas):
         if widget:
 
             self.selected_widget = widget
+            
+            if self.on_selection_changed:
+                self.on_selection_changed(
+                    widget.component
+                )
 
             self.last_x = event.x
             self.last_y = event.y

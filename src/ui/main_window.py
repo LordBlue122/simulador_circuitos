@@ -8,6 +8,10 @@ from src.ui.workspace_canvas import (
     WorkspaceCanvas
 )
 
+from src.ui.property_panel import (
+    PropertyPanel
+)
+
 
 class MainWindow(tk.Tk):
 
@@ -17,6 +21,15 @@ class MainWindow(tk.Tk):
 
         self.title(
             "Simulador de Circuitos Lógicos"
+        )
+        
+        self.properties = PropertyPanel(
+            self
+        )
+        
+        self.properties.pack(
+            side="right",
+            fill="y"
         )
 
         self.geometry("1000x600")
@@ -36,7 +49,8 @@ class MainWindow(tk.Tk):
         )
 
         self.workspace = WorkspaceCanvas(
-            self
+            self,
+            self.on_component_selected
         )
 
         self.workspace.pack(
@@ -51,4 +65,13 @@ class MainWindow(tk.Tk):
     ):
         self.workspace.add_gate(
             gate_type
+        )
+        
+    def on_component_selected(
+        self,
+        component
+    ):
+
+        self.properties.show_component(
+            component
         )

@@ -2,6 +2,7 @@ from src.ui.pin_widget import PinWidget
 from src.logic.components.input_node import InputNode
 from src.logic.components.output_node import OutputNode
 from src.logic.components.gates.gate import Gate
+from src.logic.components.gates.not_gate import NotGate
 
 class GateWidget:
 
@@ -157,26 +158,42 @@ class GateWidget:
 
         else:
 
-            self.input_pins = [
+            if isinstance(self.component, NotGate):
 
-                PinWidget(
-                    self.canvas,
-                    self,
-                    self.x,
-                    self.y + 10,
-                    PinWidget.INPUT,
-                    0
-                ),
+                self.input_pins.append(
 
-                PinWidget(
-                    self.canvas,
-                    self,
-                    self.x,
-                    self.y + self.HEIGHT - 10,
-                    PinWidget.INPUT,
-                    1
+                    PinWidget(
+                        self.canvas,
+                        self,
+                        self.x,
+                        self.y + self.HEIGHT // 2,
+                        PinWidget.INPUT,
+                        0
+                    )
                 )
-            ]
+
+            else:
+
+                self.input_pins = [
+
+                    PinWidget(
+                        self.canvas,
+                        self,
+                        self.x,
+                        self.y + 10,
+                        PinWidget.INPUT,
+                        0
+                    ),
+
+                    PinWidget(
+                        self.canvas,
+                        self,
+                        self.x,
+                        self.y + self.HEIGHT - 10,
+                        PinWidget.INPUT,
+                        1
+                    )
+                ]
 
             self.output_pin = PinWidget(
                 self.canvas,

@@ -1,0 +1,28 @@
+{
+    "components": [
+        {
+            "name": "INPUT_1",
+            "type": "InputNode"
+        },
+        {
+            "name": "NOT_2",
+            "type": "NotGate"
+        },
+        {
+            "name": "OUTPUT_3",
+            "type": "OutputNode"
+        }
+    ],
+    "connections": [
+        {
+            "source": "INPUT_1",
+            "target": "NOT_2",
+            "input_index": 0
+        },
+        {
+            "source": "NOT_2",
+            "target": "OUTPUT_3",
+            "input_index": 0
+        }
+    ]
+}

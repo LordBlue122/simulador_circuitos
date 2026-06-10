@@ -2,6 +2,8 @@ import tkinter as tk
 from src.logic.circuits.circuit import Circuit
 from src.ui.widgets.wire_widget import WireWidget
 from src.logic.circuits.validator import CircuitValidator
+from src.ui.gate_widget import GateWidget
+from src.ui.widgets.wire_widget import WireWidget
 
 
 class WorkspaceCanvas(tk.Canvas):
@@ -270,3 +272,62 @@ class WorkspaceCanvas(tk.Canvas):
             return
 
         self.finish_connection(pin)
+        
+    def clear_workspace(self):
+
+        self.delete("all")
+
+        self.gate_widgets.clear()
+        self.wire_widgets.clear()
+        self.component_widgets.clear()
+
+        self.connection_source = None
+
+        if hasattr(self, "selected_widget"):
+            self.selected_widget = None
+        
+    def load_from_circuit(self, circuit):
+
+        self.clear_workspace()
+
+        self.circuit = circuit
+
+        component_to_widget = {}
+
+        for index, component in enumerate(circuit.get_components()):
+
+            x = 150 + (index % 4) * 180
+            y = 100 + (index // 4) * 120
+
+            widget = GateWidget(
+                self,
+                component,
+                x,
+                y
+            )
+
+            self.gate_widgets.append(widget)
+
+            self.component_widgets[component.name] = widget
+
+            component_to_widget[component.name] = widget
+
+        for wire in circuit.get_wires():
+
+            source_widget = component_to_widget[wire.source.name]
+            target_widget = component_to_widget[wire.target.name]
+
+            source_pin = source_widget.output_pin
+
+            target_pin = target_widget.input_pins[
+                wire.target_input_index
+            ]
+
+            wire_widget = WireWidget(
+                self,
+                wire,
+                source_pin,
+                target_pin
+            )
+
+            self.wire_widgets.append(wire_widget)

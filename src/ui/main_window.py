@@ -12,6 +12,8 @@ from src.ui.property_panel import (
     PropertyPanel
 )
 
+from src.persistence.serializer import CircuitSerializer
+
 from src.logic.simulation.simulator import (
     Simulator
 )
@@ -32,6 +34,14 @@ from src.logic.components.output_node import (
 
 from src.ui.truth_table_window import (
     TruthTableWindow
+)
+
+from src.persistence.serializer import (
+    CircuitSerializer
+)
+
+from src.persistence.json_repository import (
+    JsonRepository
 )
 
 
@@ -85,6 +95,28 @@ class MainWindow(tk.Tk):
             self,
             text="Tabla de Verdad",
             command=self.generate_truth_table
+        )
+        
+        self.save_button = tk.Button(
+            self,
+            text="Guardar",
+            command=self.save_circuit
+        )
+
+        self.save_button.pack(
+            side="bottom",
+            fill="x"
+        )
+        
+        self.load_button = tk.Button(
+            self,
+            text="Cargar",
+            command=self.load_circuit
+        )
+
+        self.load_button.pack(
+            side="bottom",
+            fill="x"
         )
 
         self.truth_table_button.pack(
@@ -202,3 +234,33 @@ class MainWindow(tk.Tk):
             outputs,
             table
         )
+        
+    def save_circuit(self):
+
+        data = CircuitSerializer.serialize(
+            self.workspace.circuit
+        )
+
+        JsonRepository.save(
+            data,
+            "circuit.json"
+        )
+
+        print(
+            "Circuito guardado"
+        )
+        
+    def load_circuit(self):
+
+        filepath = filedialog.askopenfilename(
+            filetypes=[("JSON Files", "*.json")]
+        )
+
+        if not filepath:
+            return
+
+        data = JsonRepository.load(filepath)
+
+        circuit = CircuitSerializer.deserialize(data)
+
+        self.workspace.load_from_circuit(circuit)

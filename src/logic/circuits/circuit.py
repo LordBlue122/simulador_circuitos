@@ -37,3 +37,20 @@ class Circuit:
 
     def get_wires(self):
         return self.wires
+    
+    def is_input_connected(
+        self,
+        target,
+        target_input_index
+    ):
+
+        for wire in self.wires:
+
+            if (
+                wire.target == target
+                and
+                wire.target_input_index == target_input_index
+            ):
+                return True
+
+        return False

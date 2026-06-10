@@ -127,3 +127,17 @@ class CircuitValidator:
         recursion_stack.remove(node)
 
         return False
+    
+    def would_create_cycle(
+            self,
+            source,
+            target
+        ):
+
+        graph = self._build_graph()
+
+        return self._path_exists(
+            start=target,
+            goal=source,
+            graph=graph
+        )

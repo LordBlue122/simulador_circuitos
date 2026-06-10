@@ -31,12 +31,30 @@ class PinWidget:
         self.circle_id = None
 
         self.draw()
+        
+        self.canvas.tag_bind(
+            self.circle_id,
+            "<Button-3>",
+            self.on_connect_click
+        )
+
+        self.canvas.tag_bind(
+            self.circle_id,
+            "<Enter>",
+            self.on_mouse_enter
+        )
+
+        self.canvas.tag_bind(
+            self.circle_id,
+            "<Leave>",
+            self.on_mouse_leave
+        )
 
     def draw(self):
         
         r = self.RADIUS
         
-        hitbox_radius = 25
+        hitbox_radius = 14
 
         self.hitbox_id = self.canvas.create_oval(
             self.x - hitbox_radius,
@@ -107,3 +125,16 @@ class PinWidget:
     def is_output(self):
 
         return self.pin_type == self.OUTPUT
+    
+    def on_mouse_enter(self, event):
+
+        self.canvas.config(
+            cursor="crosshair"
+        )
+
+
+    def on_mouse_leave(self, event):
+
+        self.canvas.config(
+            cursor=""
+        )

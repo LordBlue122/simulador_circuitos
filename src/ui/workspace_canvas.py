@@ -80,7 +80,7 @@ class WorkspaceCanvas(tk.Canvas):
             event.x,
             event.y
         )
-
+        
         if not item:
             return
 
@@ -140,6 +140,18 @@ class WorkspaceCanvas(tk.Canvas):
             self.connection_source = None   
             return
 
+        if self.circuit.is_input_connected(
+            target_pin.owner.component,
+            target_pin.index
+        ):
+
+            print(
+                f"Input {target_pin.index} ocupado"
+            )
+
+            self.connection_source = None
+            return
+        
         if target_pin.is_connected():
 
             print(

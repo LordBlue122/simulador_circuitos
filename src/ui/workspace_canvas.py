@@ -1,6 +1,7 @@
 import tkinter as tk
 from src.logic.circuits.circuit import Circuit
 from src.ui.widgets.wire_widget import WireWidget
+from src.logic.circuits.validator import CircuitValidator
 
 
 class WorkspaceCanvas(tk.Canvas):
@@ -137,7 +138,7 @@ class WorkspaceCanvas(tk.Canvas):
 
         if source_pin.owner == target_pin.owner:
 
-            self.connection_source = None   
+            self.connection_source = None
             return
 
         if self.circuit.is_input_connected(
@@ -151,7 +152,7 @@ class WorkspaceCanvas(tk.Canvas):
 
             self.connection_source = None
             return
-        
+
         if target_pin.is_connected():
 
             print(
@@ -160,10 +161,44 @@ class WorkspaceCanvas(tk.Canvas):
 
             self.connection_source = None
             return
-        
+
+        source_component = (
+            source_pin.owner.component
+        )
+
+        target_component = (
+            target_pin.owner.component
+        )
+
+        print(
+            "SOURCE:",
+            source_component.name,
+            id(source_component)
+        )
+
+        print(
+            "TARGET:",
+            target_component.name,
+            id(target_component)
+        )
+
+        validator = CircuitValidator(
+            self.circuit
+        )
+
+        if validator.would_create_cycle(
+            source_component,
+            target_component
+        ):
+
+            print("Cycle detected")
+
+            self.connection_source = None
+            return
+
         wire = self.circuit.connect(
-            source_pin.owner.component,
-            target_pin.owner.component,
+            source_component,
+            target_component,
             target_pin.index
         )
 
@@ -181,9 +216,9 @@ class WorkspaceCanvas(tk.Canvas):
         self.connection_source = None
 
         print(
-            f"{source_pin.owner.component.name}"
+            f"{source_component.name}"
             f" -> "
-            f"{target_pin.owner.component.name}"
+            f"{target_component.name}"
             f" [input {target_pin.index}]"
         )
 

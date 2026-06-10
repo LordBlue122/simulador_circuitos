@@ -141,3 +141,32 @@ class CircuitValidator:
             goal=source,
             graph=graph
         )
+        
+    def _path_exists(
+        self,
+        start,
+        goal,
+        graph
+    ):
+
+        visited = set()
+
+        stack = [start]
+
+        while stack:
+
+            node = stack.pop()
+
+            if node == goal:
+                return True
+
+            if node in visited:
+                continue
+
+            visited.add(node)
+
+            stack.extend(
+                graph.get(node, [])
+            )
+
+        return False

@@ -7,11 +7,11 @@ class TruthTableGenerator:
         self,
         simulator,
         input_nodes,
-        output_node
+        output_nodes
     ):
         self.simulator = simulator
         self.input_nodes = input_nodes
-        self.output_node = output_node
+        self.output_nodes = output_nodes
 
     def generate(self):
 
@@ -32,15 +32,31 @@ class TruthTableGenerator:
 
             self.simulator.run()
 
+            outputs = []
+
+            for node in self.output_nodes:
+                outputs.append(
+                    node.evaluate()
+                )
+
             row = {
                 "inputs": list(values),
-                "output": self.output_node.evaluate()
+                "outputs": outputs
             }
 
             table.append(row)
+            
+            self.table = table
 
         return table
     
     def print_table(self):
-        for row in self.table:
-            print(f"Inputs: {row['inputs']} -> Output: {row['output']}")
+
+        table = self.generate()
+
+        for row in table:
+
+            print(
+                f"{row['inputs']} -> "
+                f"{row['outputs']}"
+            )

@@ -1,5 +1,6 @@
 import tkinter as tk
 from src.logic.components.input_node import InputNode
+from src.logic.components.output_node import OutputNode
 
 
 class PropertyPanel(tk.Frame):
@@ -25,6 +26,20 @@ class PropertyPanel(tk.Frame):
             self,
             text=""
         )
+        
+        self.value_title = tk.Label(
+            self,
+            text="Valor:"
+        )
+
+        self.value_title.pack()
+
+        self.value_value = tk.Label(
+            self,
+            text=""
+        )
+
+        self.value_value.pack()
 
         self.name_value.pack()
 
@@ -52,15 +67,6 @@ class PropertyPanel(tk.Frame):
         )
 
         self.type_value.pack()
-
-    def show_component(
-        self,
-        component
-    ):
-
-        self.name_label.config(
-            text=component.name
-        )
     
     def show_component(
         self,
@@ -76,6 +82,32 @@ class PropertyPanel(tk.Frame):
         self.type_value.config(
             text=type(component).__name__
         )
+        
+        if isinstance(
+            component,
+            InputNode
+        ):
+
+            self.value_value.config(
+                text=str(component.value)
+            )
+            
+        elif isinstance(
+            component,
+            OutputNode
+        ):
+
+            self.value_value.config(
+                text=str(component.value)
+            )
+        elif hasattr(
+            component,
+            "output"
+        ):
+
+            self.value_value.config(
+                text=str(component.output)
+            )
 
         self.value_check.pack_forget()
 

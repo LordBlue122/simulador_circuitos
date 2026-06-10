@@ -2,6 +2,8 @@ from src.logic.components.gates.and_gate import AndGate
 from src.logic.components.gates.or_gate import OrGate
 from src.logic.components.gates.xor_gate import XorGate
 from src.logic.components.gates.not_gate import NotGate
+from src.logic.components.input_node import InputNode
+from src.logic.components.output_node import OutputNode
 
 
 class GateFactory:
@@ -10,7 +12,9 @@ class GateFactory:
         "AND": AndGate,
         "OR": OrGate,
         "XOR": XorGate,
-        "NOT": NotGate
+        "NOT": NotGate,
+        "INPUT": InputNode,
+        "OUTPUT": OutputNode
     }
 
     @classmethod

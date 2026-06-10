@@ -1,4 +1,7 @@
 from src.ui.pin_widget import PinWidget
+from src.logic.components.input_node import InputNode
+from src.logic.components.output_node import OutputNode
+from src.logic.components.gates.gate import Gate
 
 class GateWidget:
 
@@ -56,39 +59,6 @@ class GateWidget:
             self.y + self.HEIGHT / 2, 
             text=self.component.name
         )
-        
-
-        
-    def create_pins(self):
-
-        self.input_pins = [
-
-            PinWidget(
-                self.canvas,
-                self,
-                self.x,
-                self.y + 10,
-                PinWidget.INPUT,
-                0
-            ),
-
-            PinWidget(
-                self.canvas,
-                self,
-                self.x,
-                self.y + self.HEIGHT - 10,
-                PinWidget.INPUT,
-                1
-            )
-        ]
-
-        self.output_pin = PinWidget(
-            self.canvas,
-            self,
-            self.x + self.WIDTH,
-            self.y + self.HEIGHT // 2,
-            PinWidget.OUTPUT
-        )
 
     def move(self, dx, dy):
 
@@ -107,7 +77,8 @@ class GateWidget:
         for pin in self.input_pins:
             pin.move(dx, dy)
 
-        self.output_pin.move(dx, dy)
+        if self.output_pin:
+            self.output_pin.move(dx, dy)
 
         self.x += dx
         self.y += dy
@@ -133,9 +104,12 @@ class GateWidget:
 
         return False
         
-    def get_input_position(self):
+    def get_output_position(self):
 
-        return self.input_pins[0].get_position()
+        if self.output_pin:
+            return self.output_pin.get_position()
+
+        return None
 
     def get_output_position(self):
 
@@ -148,31 +122,66 @@ class GateWidget:
         
     def create_pins(self):
 
-        self.input_pins = [
-        
-            PinWidget(
-                self.canvas,
-                self,
-                self.x,
-                self.y + 10,
-                PinWidget.INPUT,
-                0
-            ),
+        self.input_pins = []
+        self.output_pin = None
 
-            PinWidget(
+        if isinstance(
+            self.component,
+            InputNode
+        ):
+
+            self.output_pin = PinWidget(
                 self.canvas,
                 self,
-                self.x,
-                self.y + self.HEIGHT - 10,
-                PinWidget.INPUT,
-                1
+                self.x + self.WIDTH,
+                self.y + self.HEIGHT // 2,
+                PinWidget.OUTPUT
             )
-        ]
-        
-        self.output_pin = PinWidget(
-            self.canvas,
-            self,
-            self.x + self.WIDTH,
-            self.y + self.HEIGHT // 2,
-            PinWidget.OUTPUT
-        )        
+
+        elif isinstance(
+            self.component,
+            OutputNode
+        ):
+
+            self.input_pins.append(
+
+                PinWidget(
+                    self.canvas,
+                    self,
+                    self.x,
+                    self.y + self.HEIGHT // 2,
+                        PinWidget.INPUT,
+                    0
+                )
+            )
+
+        else:
+
+            self.input_pins = [
+
+                PinWidget(
+                    self.canvas,
+                    self,
+                    self.x,
+                    self.y + 10,
+                    PinWidget.INPUT,
+                    0
+                ),
+
+                PinWidget(
+                    self.canvas,
+                    self,
+                    self.x,
+                    self.y + self.HEIGHT - 10,
+                    PinWidget.INPUT,
+                    1
+                )
+            ]
+
+            self.output_pin = PinWidget(
+                self.canvas,
+                self,
+                self.x + self.WIDTH,
+                self.y + self.HEIGHT // 2,
+                PinWidget.OUTPUT
+            )

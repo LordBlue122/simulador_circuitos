@@ -1,3 +1,5 @@
+from src.ui.pin_widget import PinWidget
+
 class GateWidget:
 
     WIDTH = 80
@@ -20,20 +22,25 @@ class GateWidget:
 
         self.rect_id = None
         self.text_id = None
+        
+        self.input_pins = []
+        self.output_pin = None
+        
+        self.create_pins()
 
         self.draw()
         
-        self.canvas.tag_bind(
-            self.rect_id,
-            "<Button-3>",
-            self.on_connect_click
-        )
+    #    self.canvas.tag_bind(
+    #        self.rect_id,
+    #        "<Button-3>",
+    #        self.on_connect_click
+    #    )
 
-        self.canvas.tag_bind(
-            self.text_id,
-            "<Button-3>",
-            self.on_connect_click
-        )
+    #    self.canvas.tag_bind(
+    #        self.text_id,
+    #        "<Button-3>",
+    #        self.on_connect_click
+    #    )
 
     def draw(self):
 
@@ -49,6 +56,39 @@ class GateWidget:
             self.y + self.HEIGHT / 2, 
             text=self.component.name
         )
+        
+
+        
+    def create_pins(self):
+
+        self.input_pins = [
+
+            PinWidget(
+                self.canvas,
+                self,
+                self.x,
+                self.y + 10,
+                PinWidget.INPUT,
+                0
+            ),
+
+            PinWidget(
+                self.canvas,
+                self,
+                self.x,
+                self.y + self.HEIGHT - 10,
+                PinWidget.INPUT,
+                1
+            )
+        ]
+
+        self.output_pin = PinWidget(
+            self.canvas,
+            self,
+            self.x + self.WIDTH,
+            self.y + self.HEIGHT // 2,
+            PinWidget.OUTPUT
+        )
 
     def move(self, dx, dy):
 
@@ -63,6 +103,11 @@ class GateWidget:
             dx,
             dy
         )
+        
+        for pin in self.input_pins:
+            pin.move(dx, dy)
+
+        self.output_pin.move(dx, dy)
 
         self.x += dx
         self.y += dy
@@ -72,24 +117,62 @@ class GateWidget:
         item_id
     ):
 
-        return item_id in (
+        if item_id in (
             self.rect_id,
             self.text_id
-        )
+        ):
+            return True
+
+        for pin in self.input_pins:
+
+            if pin.contains(item_id):
+                return True
+
+        if self.output_pin and self.output_pin.contains(item_id):
+            return True
+
+        return False
         
     def get_input_position(self):
-        return (
-            self.x,
-            self.y + self.HEIGHT // 2
-        )
+
+        return self.input_pins[0].get_position()
 
     def get_output_position(self):
-        return (
-            self.x + self.WIDTH,
-            self.y + self.HEIGHT // 2
-        )
+
+        return self.output_pin.get_position()
         
-    def on_connect_click(self, event):
-        self.canvas.handle_connection_click(
-            self
-    )
+    # def on_connect_click(self, event):
+    #     self.canvas.handle_connection_click(
+    #         self
+    # )
+        
+    def create_pins(self):
+
+        self.input_pins = [
+        
+            PinWidget(
+                self.canvas,
+                self,
+                self.x,
+                self.y + 10,
+                PinWidget.INPUT,
+                0
+            ),
+
+            PinWidget(
+                self.canvas,
+                self,
+                self.x,
+                self.y + self.HEIGHT - 10,
+                PinWidget.INPUT,
+                1
+            )
+        ]
+        
+        self.output_pin = PinWidget(
+            self.canvas,
+            self,
+            self.x + self.WIDTH,
+            self.y + self.HEIGHT // 2,
+            PinWidget.OUTPUT
+        )        

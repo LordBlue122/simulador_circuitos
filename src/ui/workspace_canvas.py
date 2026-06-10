@@ -85,6 +85,11 @@ class WorkspaceCanvas(tk.Canvas):
             return
 
         item_id = item[-1]
+        
+        pin = self.find_pin(item_id)
+
+        if pin:
+            return
 
         widget = self.find_widget(item_id)
 
@@ -123,34 +128,38 @@ class WorkspaceCanvas(tk.Canvas):
             f"{gate_widget.component.name}"
         )
         
-    def finish_connection(self, target_widget):
+    def finish_connection(self, target_pin):
 
         if self.connection_source is None:
             return
 
-        source_component = (
-            self.connection_source.component
-        )
+        source_pin = self.connection_source
 
-        target_component = (
-            target_widget.component
-        )
+        if source_pin.owner == target_pin.owner:
 
-        if source_component == target_component:
-            self.connection_source = None
+            self.connection_source = None   
             return
 
+        if target_pin.is_connected():
+
+            print(
+                f"Input {target_pin.index} ocupado"
+            )
+
+            self.connection_source = None
+            return
+        
         wire = self.circuit.connect(
-            source_component,
-            target_component,
-            0
+            source_pin.owner.component,
+            target_pin.owner.component,
+            target_pin.index
         )
 
         wire_widget = WireWidget(
             self,
             wire,
-            self.connection_source,
-            target_widget
+            source_pin,
+            target_pin
         )
 
         self.wire_widgets.append(
@@ -158,11 +167,12 @@ class WorkspaceCanvas(tk.Canvas):
         )
 
         self.connection_source = None
-        
+
         print(
-            f"{source_component.name}"
+            f"{source_pin.owner.component.name}"
             f" -> "
-            f"{target_component.name}"
+            f"{target_pin.owner.component.name}"
+            f" [input {target_pin.index}]"
         )
 
     def handle_connection_click(
@@ -177,3 +187,32 @@ class WorkspaceCanvas(tk.Canvas):
     def update_wires(self):
         for wire_widget in self.wire_widgets:
             wire_widget.update_position()
+            
+    def find_pin(self, item_id):
+        for gate in self.gate_widgets:
+            for pin in gate.input_pins:
+                if pin.contains(item_id):
+                    return pin
+            if gate.output_pin and gate.output_pin.contains(item_id):
+                return gate.output_pin
+        return None
+    
+    def handle_pin_click(self, pin):
+
+        if self.connection_source is None:
+
+            if pin.is_output():
+
+                self.connection_source = pin
+
+                print(
+                    f"Salida seleccionada "
+                    f"{pin.owner.component.name}"
+                )
+
+            return
+
+        if not pin.is_input():
+            return
+
+        self.finish_connection(pin)
